@@ -1,99 +1,125 @@
 # **Flujo de Datos: De SQL a Python (Base de Datos Sakila)**
 
-Este proyecto documenta un flujo de trabajo de analisis de datos que integra el uso de bases de datos relacionales y procesamiento avanzado con Python. El objetivo principal es la extraccion, limpieza y analisis del comportamiento de alquileres y pagos de la base de datos Sakila.
+Este proyecto documenta un flujo de trabajo de análisis de datos que integra el uso de bases de datos relacionales y procesamiento avanzado con Python. El objetivo principal es la extracción, limpieza y análisis del comportamiento de alquileres y pagos de la base de datos Sakila.
 
-Fase 1: Extraccion y Limpieza en SQL
+---
 
-En esta fase inicial, se generan tres dataframes obligatorios mediante joins entre tablas especificas de la base de datos Sakila.
+## **Fase 1: Extracción y Limpieza en SQL**
 
-Generacion de Dataframes iniciales
-Dataframe 1: Actividad de clientes
+En esta fase inicial, se generan tres dataframes obligatorios mediante joins entre tablas específicas de la base de datos Sakila.
+
+### Generación de Dataframes iniciales
+
+**Dataframe 1: Actividad de clientes**
 
 Tablas: customer, address, city, country, rental, payment.
 
 Objetivo: Obtener un dataset que describa el comportamiento de alquileres y pagos.
 
-Dataframe 2: Catalogo de peliculas
+---
+
+**Dataframe 2: Catálogo de películas**
 
 Tablas: film, film_category, category, language, inventory.
 
-Objetivo: Generar una vista completa del catalogo con categorias, idiomas y disponibilidad fisica.
+Objetivo: Generar una vista completa del catálogo con categorías, idiomas y disponibilidad física.
 
-Dataframe 3: Elenco y popularidad
+---
+
+**Dataframe 3: Elenco y popularidad**
 
 Tablas: film, actor, film_actor.
 
-Objetivo: Analizar el elenco por pelicula y frecuencia de aparicion de actores.
+Objetivo: Analizar el elenco por película y frecuencia de aparición de actores.
 
-Limpieza Preliminar SQL (Dataframe 1 Seleccionado)
-Se eligio el Dataframe 1 para aplicar las siguientes reglas de limpieza directamente en el motor de base de datos antes de su exportacion:
+---
 
-Filtrado de Nulos: Eliminacion de registros con rental_id o payment_id nulos.
+### Limpieza preliminar SQL (Dataframe 1 seleccionado)
 
-Reglas de Negocio: Asegurar que amount sea mayor a 0 y que return_date no sea nula (alquileres completados).
+Se eligió el Dataframe 1 para aplicar las siguientes reglas de limpieza directamente en el motor de base de datos antes de su exportación:
 
-Estandarizacion: Uso de LOWER() para nombres, apellidos, emails y ciudades.
+* **Filtrado de nulos:** Eliminación de registros con `rental_id` o `payment_id` nulos.
+* **Reglas de negocio:** Asegurar que `amount` sea mayor a 0 y que `return_date` no sea nula (alquileres completados).
+* **Estandarización:** Uso de `LOWER()` para nombres, apellidos, emails y ciudades.
+* **Consistencia temporal:** Verificación de que `rental_date` sea menor que `return_date`.
+* **Columna derivada:** Creación de `rental_duration` calculada en días usando `DATEDIFF`.
 
-Consistencia Temporal: Verificacion de que rental_date sea menor a return_date.
+---
 
-Columna Derivada: Creacion de rental_duration calculada en dias usando DATEDIFF.Creacion de columna derivada: Calculo de la duracion del alquiler en dias.
+## **Fase 2: Procesamiento y análisis en Python**
 
-## **Fase 2: Procesamiento y Analisis en Python**
+Utilizando Visual Studio Code, se realizó una limpieza profunda del dataset exportado de SQL.
 
-Utilizando Visual Studio, se realizo una limpieza profunda del dataset exportado de SQL:
+---
 
-### **Analisis Exploratorio**
+### **Análisis exploratorio**
 
-Uso de metodos info(), isnull() y duplicated() para validar la estructura.
+Uso de métodos `info()`, `isnull()` y `duplicated()` para validar la estructura.
 
-### **Gestion de nulos**
+---
 
-Sustitucion de valores faltantes en la columna district por el valor Sin Datos y eliminacion de registros con errores en fechas.
+### **Gestión de nulos**
 
-### **NormalizaciÃ³n**
+Sustitución de valores faltantes en la columna `district` por el valor *"Sin datos"* y eliminación de registros con errores en fechas.
 
-Conversion de tipos de datos a datetime para operaciones temporales y tratamiento del codigo postal como dato categorico.
+---
 
-### **Tratamiento de Outliers**
+### **Normalización**
 
-Analisis de las variables amount y rental_duration. Se determino que los valores altos en amount corresponden a transacciones reales del sistema y no a errores, por lo que se conservaron en el dataset.
+Conversión de tipos de datos a `datetime` para operaciones temporales y tratamiento del código postal como dato categórico.
 
-### **Ingenieria de datos**
+---
 
-Creacion de una columna para identificar el dias de la operacion.
+### **Tratamiento de outliers**
+
+Análisis de las variables `amount` y `rental_duration`. Se determinó que los valores altos en `amount` corresponden a transacciones reales del sistema y no a errores, por lo que se conservaron en el dataset.
+
+---
+
+### **Ingeniería de datos**
+
+Creación de una columna para identificar el día de la operación.
+
+---
 
 ## **Interpretación de las tablas**
 
-A traves de las visualizaciones generadas se identificaron los siguientes puntos clave:
+A través de las visualizaciones generadas se identificaron los siguientes puntos clave:
 
-Distribucion de Pagos: La mayoria de las transacciones se concentran en un rango de 2.9 a 4.9.
+* **Distribución de pagos:** La mayoría de las transacciones se concentran en un rango de 2.9 a 4.9.
+* **Distribución de importes de pago:** Los importes no se distribuyen de forma uniforme, con picos repetidos en esos valores.
+* **Temporalidad:** Los días se reparten de forma bastante homogénea, no existe una preferencia clara por un número concreto de días.
+* **Relación de cobro:** Se validó que el importe total aumenta de manera proporcional a la cantidad de días de alquiler (`rental_duration`).
 
-Distribucion de importes de pago: Los importes de pago no se distribuyen de forma uniforme, con picos repetidos en esos importes.
+---
 
-Temporalidad: Los dias se reparten de forma bastante homogenea, no existe una prefrencia clara por un numero concreto de dias.
+## **Estructura de archivos en el repositorio**
 
-Relacion de Cobro: Se valido que el importe total aumenta de manera proporcional a la cantidad de dias de alquiler (rental_duration).
+* `main.py`: script para la generación del CSV sobre el que se realiza la limpieza en Python.
+* Carpeta `sql`: contiene las consultas SQL para la generación del dataframe limpio.
+* `data_cleaning.ipynb`: notebook con el código de Python, limpieza final y visualizaciones.
+* `requirements.txt`: dependencias del entorno del proyecto.
+* `.gitignore`: archivos excluidos del repositorio.
+* `.env_example`: plantilla del archivo `.env` para credenciales.
 
-## **Estructura de Archivos en el Repositorio**
+---
 
-main.py: contiene el script para la generación del csv
+## **Instrucciones de uso**
 
-Carpeta sql: Contiene las consultas de SQL para la generación del dataframe limpio.
+* Descargar e importar la base de datos Sakila en MySQL.
+* Configurar el archivo `.env` siguiendo `.env_example`.
+* Activar el entorno virtual del proyecto.
+* Instalar dependencias desde `requirements.txt`.
+* Ejecutar `main.py` desde la raíz del proyecto.
+* Verificar la creación de la carpeta `data` con `customer_activity.csv`.
+* Abrir `data_cleaning.ipynb`.
+* Conectar el notebook al kernel del entorno virtual.
+* Ejecutar el notebook para reproducir el análisis en Python.
 
-data_cleaning.ipynb: Notebook con el código de Python, limpieza final y visualizaciones.
+---
 
-requirements.txt: Todos los requisitos para el entorno del proyecto.
+## **Autores**
 
-.gitignore: Todo lo que queremos descartar del proyecto.
-
-.evn_exmple: Modelo para el .evn que usaremos para poner nuestra contraseña
-
-## **Instrucciones de Uso**
-
-Ejecutar el script SQL en un entorno compatible con la base de datos Sakila.
-
-Cargar el CSV en el Notebook de Python proporcionado para replicar el analisis y las visualizaciones.
-
-
-
-
+* Manuel Macarro de la Osa
+* Félix González Álvarez
+* Elena Suárez Serrano
