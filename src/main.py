@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, text
 from config import *
 import pandas as pd
+from pathlib import Path
 
 
 
@@ -72,6 +73,9 @@ def get_data_list_from_join():
 
     with connection:
         df = pd.read_sql(text(query_sql), connection)
+
+    # Crear carpeta si no existe
+    Path("data").mkdir(parents=True, exist_ok=True)
 
     # Export opcional (mejor nombre acorde al proyecto)
     df.to_csv(
