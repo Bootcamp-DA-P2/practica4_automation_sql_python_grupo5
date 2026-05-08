@@ -32,6 +32,42 @@ Excel (Power Query + Power Pivot)
       ↓
 Dashboard BI
 ```
+---
+
+## 📋 Gestión del Proyecto y Metodología Agile
+
+Para asegurar una organización óptima y el cumplimiento de los objetivos técnicos, el equipo utilizó la metodología **Kanban** mediante un tablero en **Trello**. El flujo de trabajo se dividió en dos etapas fundamentales o Sprints, correspondientes a la evolución de los 2 proyectos desde sus bases hasta la automatización final.
+
+### 👥 Roles del Equipo
+*   **Elena Suárez Serrano**: *Scrum Master* — Gestión de flujos de trabajo, administración del tablero Kanban y coordinación de hitos.
+*   **Manuel Macarro de la Osa**: *Data Analyst* — Arquitectura SQL, diseño de queries de negocio y modelado de datos.
+*   **Félix González Álvarez**: *Data Analyst* — Desarrollo del pipeline en Python, automatización ETL y diseño de Dashboards.
+
+### 🚀 Ciclo de Desarrollo (Sprints)
+
+El proyecto se ejecutó de forma incremental, dividiendo las tareas según los requerimientos de cada fase:
+
+#### **Sprint 1 (Fundamentos y Estructura - Práctica 3)**
+En esta fase inicial nos centramos en la extracción base y la limpieza de los datos fundamentales del negocio:
+*   **Infraestructura:** Creación del repositorio oficial en GitHub.
+*   **Generación de Datasets:** Construcción de DataFrames clave para el análisis:
+    *   *DataFrame 1:* Actividad y comportamiento de clientes.
+    *   *DataFrame 2:* Catálogo completo de películas.
+    *   *DataFrame 3:* Elenco, actores y métricas de popularidad.
+*   **Procesamiento:** Aplicación de limpieza directamente mediante SQL en los DataFrames seleccionados.
+*   **Automatización Inicial:** Configuración del archivo `main.py` para la exportación de archivos CSV procesados.
+*   **Documentación Técnica:** Estructuración y documentación detallada del Notebook de desarrollo.
+
+#### **Sprint 2 (Automatización y BI - Práctica 4)**
+Evolucionamos el sistema hacia un pipeline ETL completamente automatizado y visual:
+*   **Infraestructura Avanzada:** Creación del repositorio para el Proyecto 4.
+*   **Pipeline ETL:** Desarrollo del motor `sakila_ETL.py` para la extracción y transformación dinámica, conectándolo directamente con el punto de entrada `main.py`.
+*   **Modelado SQL:** Creación de queries específicas diseñadas para establecer relaciones eficientes en Power Pivot.
+*   **Integración Excel:** Carga y gestión de archivos CSV mediante **Power Query**.
+*   **Business Intelligence:** 
+    *   Creación de medidas DAX y nuevas columnas calculadas en **Power Pivot**.
+    *   Diseño y construcción del **Dashboard interactivo**.
+*   **Finalización:** Redacción y diseño del README del Dashboard y del README general del proyecto.
 
 ---
 
