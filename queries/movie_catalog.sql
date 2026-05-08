@@ -1,5 +1,3 @@
-USE sakila;
-
 SELECT 
     f.film_id, f.title, f.description, f.release_year, f.length, f.rating,
     fc.category_id, cat.name AS category_name,

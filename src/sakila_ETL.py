@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 
+# Create a database connection
 def connection_bd():
     """Crear conexión a la base de datos"""
     # 1. Construir la URL de conexión completa
@@ -20,14 +21,13 @@ def test_connection():
     try:
         with connection:
             print("Conexión exitosa a la base de datos.")
-            result = connection.execute(text("SELECT COUNT() FROM customer;"))
+            result = connection.execute(text("SELECT COUNT(*) FROM customer;"))
             count = result.fetchone()[0]
 
             print(f"Clientes en la tabla customer: {count}")
 
     except Exception as e:
         print(f"Error al conectar a la base de datos: {e}")
-
 
 def run_query(query_path):
     """Ejecutar query desde archivo SQL y devolver DataFrame"""
@@ -39,6 +39,29 @@ def run_query(query_path):
         df = pd.read_sql(text(query_sql), connection)
 
     return df
+
+def export_csv(df, output_path):
+    """Guardar DataFrame en CSV"""
+    Path("output").mkdir(parents=True, exist_ok=True)
+
+    df.to_csv(output_path, index=False, encoding="utf-8")
+
+    print(f"CSV generado: {output_path}")
+
+def process_all_queries():
+    """Ejecuta todos los SQL de la carpeta queries y genera CSVs"""
+
+    queries_folder = Path("queries")
+    sql_files = list(queries_folder.glob("*.sql"))
+
+    for sql_file in sql_files:
+        print(f"Ejecutando: {sql_file.name}")
+
+        df = run_query(sql_file)
+
+        output_file = Path("output") / f"{sql_file.stem}.csv"
+
+        export_csv(df, output_file)    
 
 def export_csv(df, output_path):
     """Guardar DataFrame en CSV"""

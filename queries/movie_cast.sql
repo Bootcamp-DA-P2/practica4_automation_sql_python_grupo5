@@ -1,4 +1,3 @@
-USE sakila;
 SELECT 
     f.film_id, f.title, a.actor_id, a.first_name, a.last_name
 FROM film f
