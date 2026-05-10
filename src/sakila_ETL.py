@@ -4,6 +4,10 @@ import pandas as pd
 from pathlib import Path
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+QUERIES_FOLDER = PROJECT_ROOT / "queries"
+OUTPUT_FOLDER = PROJECT_ROOT / "output"
+
 
 # Create a database connection
 def connection_bd():
@@ -17,8 +21,8 @@ def connection_bd():
 
 def test_connection():
     """Probar la conexión a la base de datos"""
-    connection = connection_bd()
     try:
+        connection = connection_bd()
         with connection:
             print("Conexión exitosa a la base de datos.")
             result = connection.execute(text("SELECT COUNT(*) FROM customer;"))
@@ -43,7 +47,7 @@ def run_query(query_path):
 
 def export_csv(df, output_path):
     """Guardar DataFrame en CSV"""
-    Path("output").mkdir(parents=True, exist_ok=True)
+    OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
 
     df.to_csv(output_path, index=False, encoding="utf-8")
 
@@ -52,16 +56,32 @@ def export_csv(df, output_path):
 def process_all_queries():
     """Ejecuta todos los SQL de la carpeta queries y genera CSVs"""
 
-    queries_folder = Path("queries")
-    sql_files = list(queries_folder.glob("*.sql"))
+    sql_files = sorted(QUERIES_FOLDER.glob("*.sql"))
+    successful_exports = []
+    failed_queries = []
+
+    if not sql_files:
+        print(f"No se encontraron archivos SQL en: {QUERIES_FOLDER}")
+        return
 
     for sql_file in sql_files:
         print(f"Ejecutando: {sql_file.name}")
 
-        df = run_query(sql_file)
+        try:
+            df = run_query(sql_file)
 
-        output_file = Path("output") / f"{sql_file.stem}.csv"
+            output_file = OUTPUT_FOLDER / f"{sql_file.stem}.csv"
 
-        export_csv(df, output_file)    
+            export_csv(df, output_file)
+            successful_exports.append(output_file)
+
+        except Exception as e:
+            print(f"Error al procesar {sql_file.name}: {e}")
+            failed_queries.append(sql_file.name)
+
+    print(f"Proceso finalizado. CSVs generados: {len(successful_exports)}. Errores: {len(failed_queries)}.")
+
+    if failed_queries:
+        print(f"Consultas con error: {', '.join(failed_queries)}")
 
     
