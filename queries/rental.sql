@@ -16,8 +16,6 @@ SELECT
 FROM rental r
 JOIN inventory i ON r.inventory_id = i.inventory_id
 JOIN payment p ON r.rental_id = p.rental_id
-WHERE r.rental_id IS NOT NULL
-  AND p.payment_id IS NOT NULL
-  AND r.return_date IS NOT NULL
+WHERE r.return_date IS NOT NULL
   AND p.amount > 0
   AND r.rental_date < r.return_date;
