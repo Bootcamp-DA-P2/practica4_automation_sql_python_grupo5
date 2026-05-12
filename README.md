@@ -1,122 +1,73 @@
-# **Flujo de Datos: De SQL a Python (Base de Datos Sakila)**
+# **Proyecto - Automatización MySQL → Python → Excel**
 
-Este proyecto documenta un flujo de trabajo de análisis de datos que integra el uso de bases de datos relacionales y procesamiento avanzado con Python. El objetivo principal es la extracción, limpieza y análisis del comportamiento de alquileres y pagos de la base de datos Sakila.
+Este proyecto automatiza la extracción y análisis de datos de la base de datos SQL usando Python, generando varios archivos CSV que se conectan automáticamente a un libro de Excel. El objetivo final es generar archivos optimizados para alimentar un modelo de datos en Power Pivot y construir un Dashboard interactivo en Excel.
 
----
+## **Fase 1: Configuración del Entorno y Extracción SQL**
+En esta fase se prepara la infraestructura necesaria y se definen las consultas de extracción centradas en el núcleo del negocio: clientes, películas y alquileres.
 
-## **Fase 1: Extracción y Limpieza en SQL**
+Configuración inicial
+•	**Instalación de Sakila**: Configuración del esquema y datos en el motor MySQL.
+•	**Entorno de Python**: Creación de un entorno virtual (venv) para el aislamiento de dependencias.
+•	**Seguridad**: Implementación de variables de entorno mediante un archivo .env para gestionar credenciales de conexión (Host, User, Password, Port).
+### **.Generación de Dataframes (Vistas SQL)**
 
-En esta fase inicial, se generan tres dataframes obligatorios mediante joins entre tablas específicas de la base de datos Sakila.
+Se han diseñado tres consultas optimizadas para alimentar el modelo de datos:
+1.	**Dataset  Rental** : Unifica rental y payment para obtener transacciones financieras con fechas de operación.
+2.	**Dataset  Customers**: Vincula country y suma de amount
+3.	**Dataset  Movies**: Relaciona title y suma de amount
+________________________________________
+## **Fase 2: Desarrollo del pipeline en Python**
 
-### Generación de Dataframes iniciales
+Utilizando Python como motor de automatización, gestionamos el flujo de datos desde la base de datos hasta local.
+## **Conexión y Extracción**
+•	**Implementación de la conexión**: Uso de mysql-connector-python con gestión de errores para asegurar la disponibilidad del servidor.
+•	**Generación del Dataset**: Ejecución de consultas SQL optimizadas y carga en estructuras de datos de Pandas para su limpieza inmediata.
+## **Sistema de Exportación Automática**
+•	**Gestión de rutas**: Creación dinámica de directorios de salida mediante la librería os.
+•	**Generación de CSV estructurados**: Exportación de archivos con codificación  para garantizar la compatibilidad total con el motor de importación de Excel (Power Query).
+________________________________________
+## **Fase 3: Integración con Excel y Power Pivot**
 
-**Dataframe 1: Actividad de clientes**
-
-Tablas: customer, address, city, country, rental, payment.
-
-Objetivo: Obtener un dataset que describa el comportamiento de alquileres y pagos.
-
----
-
-**Dataframe 2: Catálogo de películas**
-
-Tablas: film, film_category, category, language, inventory.
-
-Objetivo: Generar una vista completa del catálogo con categorías, idiomas y disponibilidad física.
-
----
-
-**Dataframe 3: Elenco y popularidad**
-
-Tablas: film, actor, film_actor.
-
-Objetivo: Analizar el elenco por película y frecuencia de aparición de actores.
-
----
-
-### Limpieza preliminar SQL (Dataframe 1 seleccionado)
-
-Se eligió el Dataframe 1 para aplicar las siguientes reglas de limpieza directamente en el motor de base de datos antes de su exportación:
-
-* **Filtrado de nulos:** Eliminación de registros con `rental_id` o `payment_id` nulos.
-* **Reglas de negocio:** Asegurar que `amount` sea mayor a 0 y que `return_date` no sea nula (alquileres completados).
-* **Estandarización:** Uso de `LOWER()` para nombres, apellidos, emails y ciudades.
-* **Consistencia temporal:** Verificación de que `rental_date` sea menor que `return_date`.
-* **Columna derivada:** Creación de `rental_duration` calculada en días usando `DATEDIFF`.
-
----
-
-## **Fase 2: Procesamiento y análisis en Python**
-
-Utilizando Visual Studio Code, se realizó una limpieza profunda del dataset exportado de SQL.
-
----
-
-### **Análisis exploratorio**
-
-Uso de métodos `info()`, `isnull()` y `duplicated()` para validar la estructura.
-
----
-
-### **Gestión de nulos**
-
-Sustitución de valores faltantes en la columna `district` por el valor *"Sin datos"* y eliminación de registros con errores en fechas.
-
----
-
-### **Normalización**
-
-Conversión de tipos de datos a `datetime` para operaciones temporales y tratamiento del código postal como dato categórico.
-
----
-
-### **Tratamiento de outliers**
-
-Análisis de las variables `amount` y `rental_duration`. Se determinó que los valores altos en `amount` corresponden a transacciones reales del sistema y no a errores, por lo que se conservaron en el dataset.
-
----
-
-### **Ingeniería de datos**
-
-Creación de una columna para identificar el día de la operación.
-
----
-
-## **Interpretación de las tablas**
-
-A través de las visualizaciones generadas se identificaron los siguientes puntos clave:
-
-* **Distribución de pagos:** La mayoría de las transacciones se concentran en un rango de 2.9 a 4.9.
-* **Distribución de importes de pago:** Los importes no se distribuyen de forma uniforme, con picos repetidos en esos valores.
-* **Temporalidad:** Los días se reparten de forma bastante homogénea, no existe una preferencia clara por un número concreto de días.
-* **Relación de cobro:** Se validó que el importe total aumenta de manera proporcional a la cantidad de días de alquiler (`rental_duration`).
-
----
-
+El pipeline está diseñado específicamente para facilitar la creación de un modelo relacional dentro de Excel.
+## **Estructura de Datos para Dashboard**
+•	**Formateo compatible**: Los archivos generados incluyen encabezados estandarizados y tipos de datos, pre-procesados en Python.
+•	**Documentación de conexión**:
+1.	Importación de CSVs mediante Power Query.
+2.	Carga directa al Modelo de Datos (Power Pivot).
+3.	Establecimiento de relaciones entre customer, movie y rental
+**Visualización**
+•	Creación de medidas DAX 
+•	Diseño de un Dashboard con segmentadores por categorías
+________________________________________
+**Automatización y Calidad**
+Para garantizar la fiabilidad del flujo de datos, el proyecto incluye:
+•	Script Principal (main.py): Un único punto de ejecución que dispara todo el proceso ETL.
+•	Manejo de Errores: Implementación de bloques try-except para capturar fallos de conexión, errores en consultas SQL o permisos de escritura denegados al exportar archivos abiertos.
+•	Validación de Datos: Verificación de que el stock de películas sea coherente antes de la exportación.
+________________________________________
 ## **Estructura de archivos en el repositorio**
+•	main.py: Script central que ejecuta el pipeline completo.
+•	database_connection.py: Módulo encargado de la lógica de conexión y cierre de sesiones MySQL.
+•	queries.py: Diccionario de consultas SQL optimizadas para customer, movie y rental.
+•	requirements.txt: Dependencias necesarias (pandas, mysql-connector, python-dotenv).
+•	.env_example: Plantilla para la configuración de accesos a la base de datos.
+•	exports/: Carpeta (generada automáticamente) que contiene los CSV para Excel.
+## **Fase 4: Análisis Estratégico y Business Intelligence**
 
-* `main.py`: script para la generación del CSV sobre el que se realiza la limpieza en Python.
-* Carpeta `sql`: contiene las consultas SQL para la generación del dataframe limpio.
-* `data_cleaning.ipynb`: notebook con el código de Python, limpieza final y visualizaciones.
-* `requirements.txt`: dependencias del entorno del proyecto.
-* `.gitignore`: archivos excluidos del repositorio.
-* `.env_example`: plantilla del archivo `.env` para credenciales.
+A través del procesamiento de datos y la visualización en el Dashboard, el proyecto permite identificar patrones críticos para la toma de decisiones:
+•	Comportamiento de clientes y patrones de consumo: Análisis de la frecuencia de alquiler y preferencias por categorías de películas o ratings de contenido.
+•	Distribución geográfica de ingresos: Mapeo de la generación de dinero segmentada por países y ciudades, permitiendo identificar las regiones más rentables.
+•	Tendencias temporales de alquileres y pagos: Visualización de picos de actividad por día de la semana y evolución mensual de los ingresos.
+•	Identificación de clientes VIP y mercados clave: Aplicación de filtros para detectar a los usuarios con mayor gasto acumulado y las tiendas con mejor rendimiento de inventario.
 
----
-
-## **Instrucciones de uso**
-
-* Descargar e importar la base de datos Sakila en MySQL.
-* Configurar el archivo `.env` siguiendo `.env_example`.
-* Activar el entorno virtual del proyecto.
-* Instalar dependencias desde `requirements.txt`.
-* Ejecutar `main.py` desde la raíz del proyecto.
-* Verificar la creación de la carpeta `data` con `customer_activity.csv`.
-* Abrir `data_cleaning.ipynb`.
-* Conectar el notebook al kernel del entorno virtual.
-* Ejecutar el notebook para reproducir el análisis en Python.
-
----
+________________________________________
+Instrucciones de uso
+1.	MySQL: Asegúrate de tener la base de datos Sakila instalada.
+2.	Entorno: Crea y activa tu entorno virtual: python -m venv venv.
+3.	Dependencias: Instala los requisitos: pip install -r requirements.txt.
+4.	Configuración: Renombra .env_example a .env y completa tus datos.
+5.	Ejecución: Corre el comando python main.py.
+6.	Excel: Abre Excel, conecta los datos de la carpeta exports a Power Pivot y actualiza tu Dashboard.
 
 ## **Autores**
 
