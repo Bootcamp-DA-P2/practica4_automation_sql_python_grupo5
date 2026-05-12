@@ -1,4 +1,4 @@
-from sakila_automation import run_automation
+from src.sakila_ETL import process_all_queries
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -10,12 +10,12 @@ load_dotenv()
 def main():
     print("Iniciando proyecto Sakila...")
 
-    # 1. Ejecutar ETL
-    run_automation()
+    # Ejecutar ETL
+    process_all_queries()
 
     print("CSVs generados")
 
-    # 2. Leer configuración desde .env
+    # Leer configuración desde .env
     auto_open = os.getenv("AUTO_OPEN_EXCEL", "false").lower() == "true"
     excel_file = os.getenv("EXCEL_FILE")
 
@@ -23,11 +23,11 @@ def main():
         print("No hay ruta de Excel configurada")
         return
 
-    # 3. Construir ruta absoluta
+    # Construir ruta absoluta
     PROJECT_ROOT = Path(__file__).resolve().parent
     excel_path = PROJECT_ROOT / excel_file
 
-    # 4. Abrir Excel si está activado en .env
+    # Abrir Excel si está activado
     if auto_open:
         try:
             os.startfile(excel_path)
