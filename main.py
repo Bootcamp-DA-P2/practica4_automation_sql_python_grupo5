@@ -1,8 +1,46 @@
-from src.sakila_ETL import test_connection, process_all_queries
+from src.sakila_ETL import process_all_queries
+from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+# Cargar variables de entorno
+load_dotenv()
 
 def main():
-    test_connection()
+    print("Iniciando proyecto Sakila...")
+
+    # Ejecutar ETL
     process_all_queries()
 
+<<<<<<< HEAD
+=======
+    print("CSVs generados")
+
+    # Leer configuración desde .env
+    auto_open = os.getenv("AUTO_OPEN_EXCEL", "false").lower() == "true"
+    excel_file = os.getenv("EXCEL_FILE")
+
+    if not excel_file:
+        print("No hay ruta de Excel configurada")
+        return
+
+    # Construir ruta absoluta
+    PROJECT_ROOT = Path(__file__).resolve().parent
+    excel_path = PROJECT_ROOT / excel_file
+
+    # Abrir Excel si está activado
+    if auto_open:
+        try:
+            os.startfile(excel_path)
+            print("Excel abierto correctamente")
+        except Exception as e:
+            print(f"No se pudo abrir Excel: {e}")
+    else:
+        print("Apertura automática de Excel desactivada")
+
+    print("Proceso finalizado")
+
+
+>>>>>>> feature/etl-powerpivot
 if __name__ == "__main__":
     main()
