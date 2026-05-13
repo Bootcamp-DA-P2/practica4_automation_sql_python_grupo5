@@ -12,8 +12,6 @@ def main():
     # Ejecutar ETL
     process_all_queries()
 
-<<<<<<< HEAD
-=======
     print("CSVs generados")
 
     # Leer configuración desde .env
@@ -41,6 +39,5 @@ def main():
     print("Proceso finalizado")
 
 
->>>>>>> feature/etl-powerpivot
 if __name__ == "__main__":
     main()

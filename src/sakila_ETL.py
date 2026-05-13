@@ -78,9 +78,6 @@ def process_all_queries():
 
             output_file = OUTPUT_FOLDER / f"{sql_file.stem}.csv"
 
-<<<<<<< HEAD
-        export_csv(df, output_file)
-=======
             export_csv(df, output_file)
             successful_exports.append(sql_file.name)
 
@@ -95,4 +92,3 @@ def process_all_queries():
     if failed_queries:
         print(f"Queries con error: {', '.join(failed_queries)}")
     
->>>>>>> feature/etl-powerpivot
