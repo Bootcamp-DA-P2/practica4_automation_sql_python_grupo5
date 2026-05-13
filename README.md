@@ -134,8 +134,8 @@ Asegúrate de tener instalada la base de datos **Sakila** en MySQL.
 Crear y activar entorno virtual:
 
 ```bash
-python -m venv venv
-venv\\Scripts\\activate
+python -m venv .venv
+source .venv/Scripts/activate
 ```
 
 ### 3. Dependencias
