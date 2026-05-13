@@ -43,6 +43,11 @@ Para asegurar una organización óptima y el cumplimiento de los objetivos técn
 *   **Manuel Macarro de la Osa**: *Data Analyst* — Arquitectura SQL, diseño de queries de negocio y modelado de datos.
 *   **Félix González Álvarez**: *Data Analyst* — Desarrollo del pipeline en Python, automatización ETL y diseño de Dashboards.
 
+### 🛠️ Seguimiento de Tareas
+Puedes consultar el progreso detallado, las tarjetas de tareas y la organización de los Sprints en nuestro tablero público:
+
+> 🔗 **[Ver Tablero del Proyecto en Trello](https://trello.com/invite/b/69fc58c4400c16ca0b5319bd/ATTIf55658fc799650d61e37756936743218A2F64685/proyecto-automatizacion-mysql-→-python-→-excel)**
+
 ### 🚀 Ciclo de Desarrollo (Sprints)
 
 El proyecto se ejecutó de forma incremental, dividiendo las tareas según los requerimientos de cada fase:
